@@ -1,7 +1,9 @@
 // src/RoiResults.js
 import React from 'react';
-import { Card, CardBody, CardTitle, CardText, Row, Col } from 'reactstrap';
+import { Card, CardBody, CardText, Row, Col, Button } from 'reactstrap';
 import { Bar, Doughnut, Line, Radar } from 'react-chartjs-2';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,9 +16,9 @@ import {
   PointElement,
   LineElement,
   RadarController,
-  RadialLinearScale // Register RadialLinearScale for Radar charts
+  RadialLinearScale
 } from 'chart.js';
-import './RoiResults.css'; // Import the new CSS file
+import './RoiResults.css';
 
 // Register chart components
 ChartJS.register(
@@ -30,7 +32,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   RadarController,
-  RadialLinearScale // Register RadialLinearScale for Radar charts
+  RadialLinearScale
 );
 
 function RoiResults({ results }) {
@@ -68,7 +70,7 @@ function RoiResults({ results }) {
   };
 
   const lineData = {
-    labels: ['Year 1', 'Year 2', 'Year 3'], // Example time-based labels
+    labels: ['Year 1', 'Year 2', 'Year 3'],
     datasets: [
       {
         label: 'Cumulative ROI',
@@ -102,24 +104,73 @@ function RoiResults({ results }) {
     ],
   };
 
+  const downloadPDF = () => {
+    const pdf = new jsPDF('portrait', 'mm', 'a4');
+    const content = document.querySelector('#report-content');
+    html2canvas(content).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 190;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+      pdf.save('ROI_Report.pdf');
+    });
+  };
+
   return (
     <Card className="results-card">
-      <CardBody>
-        {/* Output summary card */}
-        <Card className="output-summary-card mb-4">
-          <CardBody>
-            <Row>
-              <Col>
+      {/* Button to download PDF placed in the top-right corner */}
+      <div className="d-flex justify-content-end mb-4">
+        <Button color="primary" size="sm" onClick={downloadPDF}>
+          Download Report as PDF
+        </Button>
+      </div>
+      
+      <CardBody id="report-content">
+        {/* Output summary cards for each result */}
+        <Row>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
                 <CardText><strong>3-Year ROI %:</strong> {results?.roiPercentage || '0.00%'}</CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
                 <CardText><strong>Payback Period (Months):</strong> {results?.paybackPeriodMonths || '0.00'}</CardText>
-                <CardText><strong>Annual Savings:</strong> ${results?.annualSavings || 0}</CardText>
-                <CardText><strong>Total Costs:</strong> ${results?.totalCosts || 0}</CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
+                <CardText><strong>Annual Savings:</strong> ₹{results?.annualSavings || 0}</CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
+                <CardText><strong>Total Costs:</strong> ₹{results?.totalCosts || 0}</CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
                 <CardText><strong>Productivity Hours Saved:</strong> {results?.productivityHoursSaved || 0}</CardText>
+              </CardBody>
+            </Card>
+          </Col>
+          <Col md="6">
+            <Card className="result-card mb-3">
+              <CardBody>
                 <CardText><strong>Recommendation:</strong> {results?.recommendation || 'Re-evaluate or consider alternatives'}</CardText>
-              </Col>
-            </Row>
-          </CardBody>
-        </Card>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
 
         {/* Charts section */}
         {results ? (
