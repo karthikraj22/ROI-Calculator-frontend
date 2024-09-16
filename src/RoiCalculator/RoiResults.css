@@ -1,0 +1,21 @@
+/* src/RoiResults.css */
+.results-card {
+  padding: 20px;
+}
+
+.charts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Add space between rows */
+}
+
+.chart-row {
+  display: flex;
+  gap: 20px; /* Add space between charts */
+  align-items: center;
+}
+
+.chart-item {
+  flex: 1; /* Make each chart item take up equal space */
+  min-width: 0; /* Prevent items from growing too large */
+}

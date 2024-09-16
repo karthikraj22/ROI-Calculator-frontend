@@ -1,0 +1,82 @@
+/* src/StageTracker.css */
+.stage-tracker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.stage {
+  text-align: center;
+  position: relative;
+}
+
+.stage .circle {
+  display: inline-block;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  line-height: 40px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #f8f9fa;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.stage .badge {
+  display: inline-block;
+  line-height: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #fff;
+  transition: background-color 0.3s;
+}
+
+.stage.active .circle {
+  border-color: #007bff;
+}
+
+.stage.active .badge {
+  background-color: #007bff;
+}
+
+.stage .stage-label {
+  display: block;
+  margin-top: 8px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.stage.active .stage-label {
+  color: #007bff;
+}
+
+/* Add lines connecting the stages */
+.stage-tracker::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ddd;
+  z-index: -1;
+}
+
+.stage-tracker .stage:first-child::before {
+  content: none;
+}
+
+.stage-tracker .stage + .stage::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 2px;
+  background-color: #007bff;
+}

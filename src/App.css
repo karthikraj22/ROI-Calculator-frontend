@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+/* src/ModalCustom.css */
+.custom-modal .modal-dialog {
+  max-width: 60%; /* Set the maximum width of the modal */
+}
+
+.custom-modal .modal-content {
+  width: 100%;
+}
